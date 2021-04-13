@@ -1,0 +1,113 @@
+# --------------------------- packages instalation --------------------------- #
+
+packages = c("arules",
+             "arulesViz")
+
+## Check and Install Packages
+package.check <- lapply(
+  packages,
+  FUN = function(x) {
+    if (!require(x, character.only = TRUE)) {
+      install.packages(x, dependencies = TRUE)
+      library(x, character.only = TRUE)
+    }
+  }
+)
+
+# ---------------------------- Apriori Algorithm ----------------------------- #
+
+library(arules)
+library(arulesViz)
+
+# Loading dataset
+data("Groceries")
+class(Groceries)
+inspect(head(Groceries, 3)) # View the first 3 rows of the dataset
+
+# Mining frequent itemsets using the Eclat algorithm, with minimum support of 0.03
+# and 2 or less items
+# ?eclat
+frequentItems <- eclat (Groceries, 
+                        parameter = list(
+                          supp = 0.03, 
+                          maxlen = 2))
+inspect(frequentItems)
+df <- DATAFRAME(frequentItems)
+
+
+# Plot the top 10 items (in frequency)
+
+itemFrequencyPlot(Groceries, 
+                  topN=10, 
+                  type="absolute", 
+                  main="Item Frequency")
+
+
+# Mining association rules using the Apriori Algorithm, with minimum support of 0.001,
+# and minimum confidence of 0.5
+rules <- apriori (Groceries, 
+                  parameter = list(
+                    supp = 0.001, 
+                    conf = 0.5))
+
+# Sorting the rules by 'Confidence'
+rules_conf <- sort (rules, 
+                    by="confidence", 
+                    decreasing=TRUE)
+inspect(head(rules_conf, 100))
+
+# Sorting the rules by 'Lift'
+rules_lift <- sort (rules, 
+                    by="lift", 
+                    decreasing=TRUE)
+inspect(head(rules_conf, 100))
+
+
+
+# ---------------------------------- Extra ----------------------------------- #
+
+
+# Generate rules with a specific Right Side (rhs)
+# "What items lead to the purchase of item X?"
+# Eg. What items lead to the purchase of whole milk?
+#     parameter => minimum support of 0.001, and minimum confidence of 0.08
+
+rules <- apriori (data = Groceries, 
+                  parameter = list (
+                    supp=0.001,
+                    conf = 0.08), 
+                  appearance = list (
+                    default="lhs"
+                    ,rhs="whole milk"), 
+                  control = list (
+                    verbose=T))
+
+# Sorting the rules by 'Confidence'
+rules_conf <- sort (rules, 
+                    by="confidence", 
+                    decreasing=TRUE) 
+inspect(head(rules_conf))
+
+
+
+# Generate rules with a specific left side (lhs)
+# "If I purchase item X, what items am I more likely to purchase?"
+# Eg. If I buy rubbing alchol, what items am I more likely to purchase?"
+#     parameter => minimum support of 0.0000001, minimum confidence of 0.00015,
+#                   and 2 or less items
+rules <- apriori (data = Groceries, 
+                  parameter = list (
+                    supp=0.0000001, 
+                    conf = 0.00015, 
+                    minlen=2), 
+                  appearance = list(
+                    default="rhs",
+                    lhs="rubbing alcohol"), 
+                  control = list (
+                    verbose=F))
+
+# Sorting the rules by 'Confidence'
+rules_conf <- sort (rules, 
+                    by="confidence", 
+                    decreasing=TRUE)
+inspect(head(rules_conf))

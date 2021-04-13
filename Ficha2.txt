@@ -1,0 +1,11 @@
+Ex Prolog
+Definicoes
+	trace => debug
+	; => 'or'
+	X => with big letters output Variable to assign output
+	x => with small lettersinput variable to test value
+
+	1.3 e. => trace, findall(X, aluno(X, ia); aluno(X, pf), L)
+
+findall(X,tipo(X,dragon),tipo(X,dragon); not(geracao(X, 3))), L)
+findall(X, tipo(X, dragon);tipo(X,dragon), not(geracao(X, 3))), L)
