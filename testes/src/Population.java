@@ -4,7 +4,7 @@ public class Population {
     private int individualsLength;
     private int valuesArray[];
     private int weigthArray[];
-    private int matrix[][];
+   // private int matrix[][];
     private LinkedList l = new LinkedList();
     private int threshold;
     private Integer fitness[];
@@ -12,16 +12,18 @@ public class Population {
     private int elitism;
     private double crossover_rate;
     int returnedValues[] = new int[2];
+    double mutation_rate;
 
-    public Population(int populationSize, int individualsLength, int threshold, int elitism, double crossover_rate){
+    public Population(int populationSize, int individualsLength, int threshold, int elitism, double crossover_rate, double mutation_rate){
         generateRandomValuesNWeigth( individualsLength);
         this.individualsLength = individualsLength;
         this.populationSize = populationSize;
-        this.matrix = new int[populationSize][individualsLength];
+        //this.matrix = new int[populationSize][individualsLength];
         this.fitness = new Integer[populationSize];
         this.threshold = threshold;
         this.elitism = elitism;
         this.crossover_rate = crossover_rate;
+        this.mutation_rate = mutation_rate;
     }
 
 
@@ -32,10 +34,33 @@ public class Population {
        // createPopulation();
         //Calculate s1 n s2
         calculateIndividualsFitness(matrix);
-       return crossover(selection(matrix));
-       //Falta mutacao
+        matrix = selection(matrix);
+        matrix = crossover(matrix);
+        matrix = mutate(matrix);
+       return matrix;
     }
 
+
+    public int[][] mutate(int[][] matrix){
+
+        for (int i = elitism; i< matrix.length; i++){
+            if (mutation_rate >= Math.random()){
+                matrix[i] = mutateIndividual( matrix[i]);
+            }
+        }
+
+        return matrix;
+    }
+
+    public int[] mutateIndividual(int[] individual){
+        int mutation_point = new Random().nextInt(individualsLength);
+        if (individual[mutation_point] == 0){
+            individual[mutation_point] = 1;
+        }else {
+            individual[mutation_point] = 0;
+        }
+        return individual;
+    }
     public void calculateIndividualsFitness(int matrix[][]) {
         System.out.println("Start calculating fittness");
         for (int i = 0; i<matrix.length; i++){
@@ -50,7 +75,7 @@ public class Population {
     }
 
 
-    public int[][] createPopulation() {
+    public int[][] createPopulation(int[][] matrix) {
         for (int i = 0; i<matrix.length; i++){
             for (int j = 0; j< individualsLength; j++){
                 matrix[i][j] = getRandomNumber();
@@ -131,10 +156,12 @@ public class Population {
 
         for (int i = 0; i< highests.length;i++ ){
             for (Integer value: linkedList) {
-               if (highests[i] < value){
-                   highests[i] = value;
-                   indexs[i] = linkedList.indexOf(value);
-               }
+                if (value != null){
+                    if (highests[i] < value){
+                        highests[i] = value;
+                        indexs[i] = linkedList.indexOf(value);
+                    }
+                }
             }
             linkedList.remove(highests[i]);
         }
@@ -210,9 +237,9 @@ public class Population {
         }
         return parents;
     }
-    public int[][] getMatrix() {
-        return this.matrix;
-    }
+    //public int[][] getMatrix() {
+     //   return this.matrix;
+    //}
 
     public boolean solutionFound(int[] row){
         int total = 0;

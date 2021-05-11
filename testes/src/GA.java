@@ -1,11 +1,19 @@
 import java.util.Arrays;
 
 public class GA {
-    int population[][];
+    private final int generations;
+    int population[][] = new int[6][5];
+    int populationSize;
+    int individualsLength;
     Population p;
-    public GA(){
-      this.p = new Population(6, 5, 20, 3, 0.9);
-      this.population = p.createPopulation();
+    public GA(int populationSize, int individualsLength, int generations){
+      this.generations = generations;
+      this.populationSize = populationSize;
+      this.individualsLength = individualsLength;
+      population = new int[populationSize][individualsLength];
+      this.p = new Population(populationSize, individualsLength, 20, 3, 0.9, 0.3);
+
+      this.population = p.createPopulation(population);
     }
 
     public void loopthrow(){
@@ -16,7 +24,7 @@ public class GA {
 
         int genCount = 0;
         boolean solution = false;
-        while (genCount < 1000 && !solution){
+        while (genCount < generations && !solution){
             population = p.calculateShits(population);
             solution = p.solutionFound(population[0]);
             genCount++;
