@@ -191,7 +191,7 @@ public class Population {
             for (int j = 0; j< individualsLength;j++){
                 matrix[i][j] =  bests[i][j];
                 if (indexs[i] >elitism){
-                    matrix[indexs[i]][j] = -1;
+                    matrix[indexs[i]][j] = 0;
                 }
 
             }
