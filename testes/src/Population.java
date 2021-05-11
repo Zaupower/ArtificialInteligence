@@ -10,10 +10,10 @@ public class Population {
     private Integer fitness[];
     private int populationSize;
     private int elitism;
-    private int crossover_rate;
-
+    private double crossover_rate;
     int returnedValues[] = new int[2];
-    public Population(int populationSize, int individualsLength, int threshold, int elitism, int crossover_rate){
+
+    public Population(int populationSize, int individualsLength, int threshold, int elitism, double crossover_rate){
         generateRandomValuesNWeigth( individualsLength);
         this.individualsLength = individualsLength;
         this.populationSize = populationSize;
@@ -26,15 +26,18 @@ public class Population {
 
 
 
-    public void calculateShits(int matrix[][]){
+    public int[][] calculateShits(int matrix[][]){
 
         //create random population
-        createPopulation();
+       // createPopulation();
         //Calculate s1 n s2
         calculateIndividualsFitness(matrix);
+       return crossover(selection(matrix));
+       //Falta mutacao
     }
 
     public void calculateIndividualsFitness(int matrix[][]) {
+        System.out.println("Start calculating fittness");
         for (int i = 0; i<matrix.length; i++){
             returnedValues = getRowSumatory(matrix,i);
             if (returnedValues[1] <= threshold){
@@ -74,26 +77,45 @@ public class Population {
         }else{
             return 0;
         }
-
     }
 
     //do crossover in population
-    public void crossover(int matrix[][], int parents[][]){
+    public int[][] crossover(int matrix[][]){
+        int rowCounter =0;
+
+        //instantiate parents
+        int[][] parents = getParents(matrix);
+        int parent2Idx = new Random().nextInt(parents.length);
+       // int[] offspring = generateOffspring(parents[0], parents[1]);
+
+        System.out.println("Start Crossover");
         int crossover_point = individualsLength/2;
-        
 
-        for (int[] row : this.matrix){
-
-        }
-        for (int i= elitism+1; i<matrix.length;i++){
-            if (this.crossover_rate > Math.random()){
-                int[] row = matrix[i];
+        for (int i = elitism; i< matrix.length; i++){
+            if (crossover_rate >= Math.random()){
+               matrix[i] = generateOffspring(parents[0], parents[parent2Idx]);
             }
         }
 
+    return matrix;
+    }
+
+    //GenerateOffSpring
+
+    public int[] generateOffspring(int[] parent1, int[] parent2){
+        int[] offspring = new int[individualsLength];
+        int crossover_point = individualsLength/2;
+        for (int i= 0; i< crossover_point;i++){
+            offspring[i] = parent1[i];
+        }
+        for (int j = crossover_point; j< individualsLength;j++){
+           offspring[j] = parent2[j];
+        }
+        System.out.println("OffSpring: "+ Arrays.toString(offspring));
+        return offspring;
     }
     //Selection
-    public void selection(int matrix[][]){
+    public int[][] selection(int matrix[][]){
         // Convert array to list
         Integer highests[] = new Integer[elitism];
         Integer indexs[] = new Integer[elitism];
@@ -116,15 +138,45 @@ public class Population {
             }
             linkedList.remove(highests[i]);
         }
+        System.out.println("Selection start");
         System.out.println(Arrays.toString(highests));
         System.out.println(Arrays.toString(indexs));
+        System.out.println("Selection change matrix");
+        //Define matrix of bests
+        int bests[][] = new int[elitism][individualsLength];
+        for (int i = 0; i< elitism; i++){
+            for (int j = 0; j<individualsLength; j++){
+                bests[i][j] = matrix[indexs[i]][j];
+            }
+        }
+        System.out.println("Printing bests");
+
+        // Loop through all rows
+        for (int[] row : bests){
+            // converting each row as string
+            // and then printing in a separate line
+            System.out.println(Arrays.toString(row));
+
+        }
+        System.out.println("End of bests");
+
+        for (int i = 0; i< elitism; i++){
+            for (int j = 0; j< individualsLength;j++){
+                matrix[i][j] =  bests[i][j];
+                if (indexs[i] >elitism){
+                    matrix[indexs[i]][j] = -1;
+                }
+
+            }
+        }
+        return matrix;
+
        // return in
     }
-
-    public  void print2D()
+    public  void print2D(int[][] matrix)
     {
         // Loop through all rows
-        for (int[] row : this.matrix)
+        for (int[] row : matrix)
             // converting each row as string
             // and then printing in a separate line
             System.out.println(Arrays.toString(row));
@@ -136,14 +188,41 @@ public class Population {
         int newValues[] = new int[size];
         int newHeigths[] = new int[size];
         for (int i = 0; i<newHeigths.length; i++){
-            newHeigths[i] = new Random().nextInt(30);
+            newHeigths[i] = new Random().nextInt(40);
             newValues[i] = new Random().nextInt(100);
         }
 
         this.valuesArray = newValues;
         this.weigthArray = newHeigths;
+        System.out.println("Values or price");
+        System.out.println(Arrays.toString(newValues));
+        System.out.println("Heights");
+        System.out.println(Arrays.toString(newHeigths));
+    }
 
-       // System.out.println(Arrays.toString(newValues));
-        // System.out.println(Arrays.toString(newHeigths));
+    public int[][] getParents(int[][] matrix){
+        int[][] parents = new int[elitism][individualsLength];
+        for (int i = 0; i< elitism; i++){
+            for (int j = 0; j< individualsLength;j++){
+
+                parents[i][j] = matrix[i][j];
+            }
+        }
+        return parents;
+    }
+    public int[][] getMatrix() {
+        return this.matrix;
+    }
+
+    public boolean solutionFound(int[] row){
+        int total = 0;
+        for (int i = 0; i< individualsLength; i++){
+            total += row[i] *weigthArray[i];
+        }
+        System.out.println("max found: "+total + " Optimum solution: "+ threshold);
+        if (total == threshold){
+            return true;
+        }
+        return false;
     }
 }
