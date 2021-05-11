@@ -110,6 +110,7 @@ public class Population {
 
         //instantiate parents
         int[][] parents = getParents(matrix);
+        int parent1Idx = new Random().nextInt(parents.length);
         int parent2Idx = new Random().nextInt(parents.length);
        // int[] offspring = generateOffspring(parents[0], parents[1]);
 
@@ -118,7 +119,7 @@ public class Population {
 
         for (int i = elitism; i< matrix.length; i++){
             if (crossover_rate >= Math.random()){
-               matrix[i] = generateOffspring(parents[0], parents[parent2Idx]);
+               matrix[i] = generateOffspring(parents[parent1Idx], parents[parent2Idx]);
             }
         }
 
