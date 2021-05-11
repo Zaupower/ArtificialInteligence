@@ -62,7 +62,7 @@ public class Population {
         return individual;
     }
     public void calculateIndividualsFitness(int matrix[][]) {
-        System.out.println("Start calculating fittness");
+       // System.out.println("Start calculating fittness");
         for (int i = 0; i<matrix.length; i++){
             returnedValues = getRowSumatory(matrix,i);
             if (returnedValues[1] <= threshold){
@@ -70,7 +70,7 @@ public class Population {
             }else {
                 fitness[i] =0;
             }
-            System.out.println(returnedValues[0]+ " "+ returnedValues[1]);
+            //System.out.println(returnedValues[0]+ " "+ returnedValues[1]);
         }
     }
 
@@ -113,7 +113,7 @@ public class Population {
         int parent2Idx = new Random().nextInt(parents.length);
        // int[] offspring = generateOffspring(parents[0], parents[1]);
 
-        System.out.println("Start Crossover");
+        //System.out.println("Start Crossover");
         int crossover_point = individualsLength/2;
 
         for (int i = elitism; i< matrix.length; i++){
@@ -136,7 +136,7 @@ public class Population {
         for (int j = crossover_point; j< individualsLength;j++){
            offspring[j] = parent2[j];
         }
-        System.out.println("OffSpring: "+ Arrays.toString(offspring));
+       // System.out.println("OffSpring: "+ Arrays.toString(offspring));
         return offspring;
     }
     //Selection
@@ -165,10 +165,10 @@ public class Population {
             }
             linkedList.remove(highests[i]);
         }
-        System.out.println("Selection start");
-        System.out.println(Arrays.toString(highests));
-        System.out.println(Arrays.toString(indexs));
-        System.out.println("Selection change matrix");
+       // System.out.println("Selection start");
+       // System.out.println(Arrays.toString(highests));
+       // System.out.println(Arrays.toString(indexs));
+       // System.out.println("Selection change matrix");
         //Define matrix of bests
         int bests[][] = new int[elitism][individualsLength];
         for (int i = 0; i< elitism; i++){
@@ -176,16 +176,16 @@ public class Population {
                 bests[i][j] = matrix[indexs[i]][j];
             }
         }
-        System.out.println("Printing bests");
+        //System.out.println("Printing bests");
 
         // Loop through all rows
-        for (int[] row : bests){
+       // for (int[] row : bests){
             // converting each row as string
             // and then printing in a separate line
-            System.out.println(Arrays.toString(row));
+      //      System.out.println(Arrays.toString(row));
 
-        }
-        System.out.println("End of bests");
+       // }
+      //  System.out.println("End of bests");
 
         for (int i = 0; i< elitism; i++){
             for (int j = 0; j< individualsLength;j++){
@@ -202,6 +202,10 @@ public class Population {
     }
     public  void print2D(int[][] matrix)
     {
+        System.out.println("Values Array");
+        System.out.println(Arrays.toString(valuesArray));
+        System.out.println("Weigth Array");
+        System.out.println(Arrays.toString(weigthArray));
         // Loop through all rows
         for (int[] row : matrix)
             // converting each row as string
@@ -221,10 +225,10 @@ public class Population {
 
         this.valuesArray = newValues;
         this.weigthArray = newHeigths;
-        System.out.println("Values or price");
-        System.out.println(Arrays.toString(newValues));
-        System.out.println("Heights");
-        System.out.println(Arrays.toString(newHeigths));
+       // System.out.println("Values or price");
+       // System.out.println(Arrays.toString(newValues));
+       // System.out.println("Heights");
+       // System.out.println(Arrays.toString(newHeigths));
     }
 
     public int[][] getParents(int[][] matrix){

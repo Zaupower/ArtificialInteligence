@@ -31,6 +31,7 @@ public class GA {
             System.out.println("Generation number: "+ genCount);
         }
 
+
         p.print2D(population);
 
     }
