@@ -4,7 +4,6 @@ public class Population {
     private int individualsLength;
     private int valuesArray[];
     private int weigthArray[];
-   // private int matrix[][];
     private LinkedList l = new LinkedList();
     private int threshold;
     private Integer fitness[];
@@ -12,14 +11,19 @@ public class Population {
     private int elitism;
     private double crossover_rate;
     int returnedValues[] = new int[2];
-    double mutation_rate;
+    private double mutation_rate;
+
+    //TEST
+
+    int lastEval = -1;
+    int currentEval = -1;
+    //TEST
 
     public Population(int populationSize, int individualsLength, int threshold, int elitism, double crossover_rate, double mutation_rate){
         generateRandomValuesNWeigth( individualsLength);
         this.individualsLength = individualsLength;
         this.populationSize = populationSize;
-        //this.matrix = new int[populationSize][individualsLength];
-        this.fitness = new Integer[populationSize];
+        this.fitness = new Integer[this.populationSize];
         this.threshold = threshold;
         this.elitism = elitism;
         this.crossover_rate = crossover_rate;
@@ -29,9 +33,8 @@ public class Population {
 
 
     public int[][] routine(int matrix[][]){
-
         //create random population
-       // createPopulation();
+        // createPopulation();
         //Calculate s1 n s2
         calculateIndividualsFitness(matrix);
         matrix = selection(matrix);
@@ -42,8 +45,7 @@ public class Population {
 
 
     public int[][] mutate(int[][] matrix){
-
-        for (int i = elitism; i< matrix.length; i++){
+        for (int i = 2; i< matrix.length; i++){
             if (mutation_rate >= Math.random()){
                 matrix[i] = mutateIndividual( matrix[i]);
             }
@@ -62,7 +64,6 @@ public class Population {
         return individual;
     }
     public void calculateIndividualsFitness(int matrix[][]) {
-       // System.out.println("Start calculating fittness");
         for (int i = 0; i<matrix.length; i++){
             returnedValues = getRowSumatory(matrix,i);
             if (returnedValues[1] <= threshold){
@@ -70,10 +71,8 @@ public class Population {
             }else {
                 fitness[i] =0;
             }
-            //System.out.println(returnedValues[0]+ " "+ returnedValues[1]);
         }
     }
-
 
     public int[][] createPopulation(int[][] matrix) {
         for (int i = 0; i<matrix.length; i++){
@@ -106,28 +105,19 @@ public class Population {
 
     //do crossover in population
     public int[][] crossover(int matrix[][]){
-        int rowCounter =0;
-
         //instantiate parents
         int[][] parents = getParents(matrix);
         int parent1Idx = new Random().nextInt(parents.length);
         int parent2Idx = new Random().nextInt(parents.length);
-       // int[] offspring = generateOffspring(parents[0], parents[1]);
-
-        //System.out.println("Start Crossover");
-        int crossover_point = individualsLength/2;
-
-        for (int i = elitism; i< matrix.length; i++){
+        for (int i = 1; i< matrix.length; i++){
             if (crossover_rate >= Math.random()){
                matrix[i] = generateOffspring(parents[parent1Idx], parents[parent2Idx]);
             }
         }
-
     return matrix;
     }
 
     //GenerateOffSpring
-
     public int[] generateOffspring(int[] parent1, int[] parent2){
         int[] offspring = new int[individualsLength];
         int crossover_point = individualsLength/2;
@@ -137,7 +127,6 @@ public class Population {
         for (int j = crossover_point; j< individualsLength;j++){
            offspring[j] = parent2[j];
         }
-       // System.out.println("OffSpring: "+ Arrays.toString(offspring));
         return offspring;
     }
     //Selection
@@ -166,37 +155,27 @@ public class Population {
             }
             linkedList.remove(highests[i]);
         }
-       // System.out.println("Selection start");
-       // System.out.println(Arrays.toString(highests));
-       // System.out.println(Arrays.toString(indexs));
-       // System.out.println("Selection change matrix");
-        //Define matrix of bests
-        int bests[][] = new int[elitism][individualsLength];
-        for (int i = 0; i< elitism; i++){
-            for (int j = 0; j<individualsLength; j++){
-                bests[i][j] = matrix[indexs[i]][j];
-            }
-        }
-        //System.out.println("Printing bests");
 
-        // Loop through all rows
-       // for (int[] row : bests){
-            // converting each row as string
-            // and then printing in a separate line
-      //      System.out.println(Arrays.toString(row));
-
-       // }
-      //  System.out.println("End of bests");
-
-        for (int i = 0; i< elitism; i++){
-            for (int j = 0; j< individualsLength;j++){
-                matrix[i][j] =  bests[i][j];
-                if (indexs[i] >elitism){
-                    matrix[indexs[i]][j] = 0;
+        if (highests[0] > 0 ){
+            //Define matrix of bests
+            int bests[][] = new int[elitism][individualsLength];
+            for (int i = 0; i< elitism; i++){
+                for (int j = 0; j<individualsLength; j++){
+                    bests[i][j] = matrix[indexs[i]][j];
                 }
+            }
 
+            for (int i = 0; i< elitism; i++){
+                for (int j = 0; j< individualsLength;j++){
+                    matrix[i][j] =  bests[i][j];
+                    if (indexs[i] >elitism){
+                        matrix[indexs[i]][j] = 0;
+                    }
+
+                }
             }
         }
+
         return matrix;
 
        // return in
@@ -207,6 +186,7 @@ public class Population {
         System.out.println(Arrays.toString(valuesArray));
         System.out.println("Weigth Array");
         System.out.println(Arrays.toString(weigthArray));
+        System.out.println("");
         // Loop through all rows
         for (int[] row : matrix)
             // converting each row as string
@@ -220,16 +200,11 @@ public class Population {
         int newValues[] = new int[size];
         int newHeigths[] = new int[size];
         for (int i = 0; i<newHeigths.length; i++){
-            newHeigths[i] = new Random().nextInt(40);
+            newHeigths[i] = new Random().nextInt(10);
             newValues[i] = new Random().nextInt(100);
         }
-
         this.valuesArray = newValues;
         this.weigthArray = newHeigths;
-       // System.out.println("Values or price");
-       // System.out.println(Arrays.toString(newValues));
-       // System.out.println("Heights");
-       // System.out.println(Arrays.toString(newHeigths));
     }
 
     public int[][] getParents(int[][] matrix){
@@ -242,9 +217,6 @@ public class Population {
         }
         return parents;
     }
-    //public int[][] getMatrix() {
-     //   return this.matrix;
-    //}
 
     public boolean solutionFound(int[] row){
         int total = 0;
@@ -252,9 +224,31 @@ public class Population {
             total += row[i] *weigthArray[i];
         }
         System.out.println("max found: "+total + " Optimum solution: "+ threshold);
+        System.out.println("Mutation rate: "+this.mutation_rate);
         if (total == threshold){
             return true;
         }
         return false;
+    }
+    public void evaluate(int[][] matrix){
+        int total = 0;
+        int [] row;
+        row = matrix[0];
+        for (int i = 0; i< individualsLength; i++){
+            total += row[i] *weigthArray[i];
+        }
+        int sub = total - threshold;
+        if (sub< 0){
+            sub = Math.abs(sub);
+        }
+        this.lastEval = this.currentEval;
+        this.currentEval = sub;
+        if (sub!= 0 ){
+            if (this.lastEval > this.currentEval){
+                this.mutation_rate -= 0.05;
+            }else {
+                this.mutation_rate += 0.05;
+            }
+        }
     }
 }

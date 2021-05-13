@@ -6,7 +6,7 @@ public class GA {
     private final int elitism;
     private final double crossover_rate;
     private final double mutation_rate;
-    int population[][] = new int[6][5];
+    int population[][];
     int populationSize;
     int individualsLength;
     Population p;
@@ -35,12 +35,14 @@ public class GA {
         while (genCount < generations && !solution){
             population = p.routine(population);
             solution = p.solutionFound(population[0]);
+            p.evaluate(population);
             genCount++;
             System.out.println("Generation number: "+ genCount);
+            //p.print2D(population);
         }
 
-
-        p.print2D(population);
+        System.out.println(Arrays.toString(population[0]));
+       //p.print2D(population);
 
     }
 
