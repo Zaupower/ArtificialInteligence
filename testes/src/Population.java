@@ -200,7 +200,7 @@ public class Population {
         int newValues[] = new int[size];
         int newHeigths[] = new int[size];
         for (int i = 0; i<newHeigths.length; i++){
-            newHeigths[i] = new Random().nextInt(10);
+            newHeigths[i] = new Random().nextInt(10) + 1;
             newValues[i] = new Random().nextInt(100);
         }
         this.valuesArray = newValues;
@@ -243,12 +243,31 @@ public class Population {
         }
         this.lastEval = this.currentEval;
         this.currentEval = sub;
+
         if (sub!= 0 ){
             if (this.lastEval > this.currentEval){
                 this.mutation_rate -= 0.05;
+                if (this.elitism>2){
+                    this.elitism -= 1;
+                }
             }else {
                 this.mutation_rate += 0.05;
+                if (elitism< individualsLength/2){
+                    this.elitism += 1;
+                }
             }
         }
+    }
+
+    public int[] getValuesArray() {
+        return valuesArray;
+    }
+
+    public int[] getWeigthArray() {
+        return weigthArray;
+    }
+
+    public int getElitism() {
+        return elitism;
     }
 }

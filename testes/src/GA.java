@@ -41,6 +41,12 @@ public class GA {
             //p.print2D(population);
         }
 
+        System.out.println("Elitism: " + p.getElitism());
+        System.out.println("Values");
+        System.out.println(Arrays.toString(p.getValuesArray()));
+        System.out.println("Weigths");
+        System.out.println(Arrays.toString(p.getWeigthArray()));
+        System.out.println("");
         System.out.println(Arrays.toString(population[0]));
        //p.print2D(population);
 
