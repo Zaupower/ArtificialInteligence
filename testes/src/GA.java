@@ -33,7 +33,7 @@ public class GA {
         int genCount = 0;
         boolean solution = false;
         while (genCount < generations && !solution){
-            population = p.calculateShits(population);
+            population = p.routine(population);
             solution = p.solutionFound(population[0]);
             genCount++;
             System.out.println("Generation number: "+ genCount);

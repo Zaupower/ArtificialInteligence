@@ -28,7 +28,7 @@ public class Population {
 
 
 
-    public int[][] calculateShits(int matrix[][]){
+    public int[][] routine(int matrix[][]){
 
         //create random population
        // createPopulation();
